@@ -83,6 +83,10 @@ It will :
 4. PostgreSQL
 5. Docker & Docker Compose
 
+## Usage / Example
+![Screenshot 2025-04-12 134451](https://github.com/user-attachments/assets/9810ccff-bd4b-4242-a4d6-d18741b4b224)
+![Screenshot 2025-04-12 134423](https://github.com/user-attachments/assets/f003b496-b344-465b-8e01-d25271f06eb6)
+
 ## Docker Compose
 
 ```javascript
