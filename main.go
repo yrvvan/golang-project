@@ -38,5 +38,5 @@ func main() {
 	router.PUT("/users/:id", handlers.UpdateUser)
 	router.DELETE("/users/:id", handlers.DeleteUser)
 
-	router.Run(":8090")
+	router.Run(":8089")
 }
