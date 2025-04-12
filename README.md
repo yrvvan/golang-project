@@ -76,6 +76,14 @@ It will :
 - **PUT	/users/:id** #Update user
 - **DELETE /users/:id**	#Delete user
 
+| Method  | Path  | Purpose |
+| :------------ |:---------------:| -----:|
+| GET      | /users | Get all users |
+| GET      | /users/:id        |   Get user by id |
+| POST | /users        |    Create a user |
+| PUT | /users/:id        |    Update a user |
+| DELETE | /users/:id        |    Delete a user |
+
 ## 🛠️ Tech Stack
 1. Go (Golang)
 2. Gin Web Framework
