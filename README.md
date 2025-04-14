@@ -130,6 +130,7 @@ volumes:
 
 ## 🧹 To Do
 1. Add JWT authentication
-2. Role-based access control
-3. CI/CD pipeline
-4. Frontend integration (React?)
+2. Send Logs into Grafana
+3. Role-based access control
+4. CI/CD pipeline
+5. Frontend integration (React?)
