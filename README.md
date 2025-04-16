@@ -1,7 +1,5 @@
 # 🧑‍💼 Go + Gin + PostgreSQL
 
-REST API built with Golang.
-
 Supports full CRUD operations for:
 - Users
 - User Profiles
