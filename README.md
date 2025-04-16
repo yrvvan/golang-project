@@ -1,6 +1,7 @@
 # 🧑‍💼 Go + Gin + PostgreSQL
 
 Supports full CRUD operations for:
+- Login
 - Users
 - User Profiles
 - Leave Balances
