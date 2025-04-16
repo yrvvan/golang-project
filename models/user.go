@@ -10,6 +10,7 @@ type User struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 	Name      string         `json:"name"`
 	Email     string         `json:"email" gorm:"unique"`
+	Password  string         `json:"password"`
 	Profile   Profile        `json:"profile" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Leave     LeaveBalance   `json:"leave" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }

@@ -5,9 +5,9 @@ import (
 	"io"
 	"net/http"
 
-	"go-rose/database"
-	"go-rose/models"
-	"go-rose/validators"
+	"golang-project/database"
+	"golang-project/models"
+	"golang-project/validators"
 
 	"github.com/gin-gonic/gin"
 )

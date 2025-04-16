@@ -1,7 +1,8 @@
 # 🧑‍💼 Go + Gin + PostgreSQL
 
-REST API built with Golang, Gin framework, and PostgreSQL. Supports full CRUD operations for:
+REST API built with Golang.
 
+Supports full CRUD operations for:
 - Users
 - User Profiles
 - Leave Balances
@@ -13,6 +14,8 @@ REST API built with Golang, Gin framework, and PostgreSQL. Supports full CRUD op
   - Profile (national ID, birth place, etc.)
   - Leave balances (annual, sick, unpaid)
 - PostgreSQL integration
+- JWT Authorization
+- Password Hashing
 - Docker & Docker Compose ready
 - Environment-based configuration
 
@@ -60,6 +63,7 @@ DB_USER=postgres
 DB_PASSWORD=postgres
 DB_NAME=hris
 APP_PORT=8089
+JWT_SECRET={set by yourself}
 ```
 3. Start the application
 ```
@@ -89,7 +93,10 @@ It will :
 2. Gin Web Framework
 3. GORM (ORM for Go)
 4. PostgreSQL
-5. Docker & Docker Compose
+5. JWT Authorization
+6. Middleware
+7. Password Hashing
+8. Docker & Docker Compose
 
 ## Usage / Example
 ![Screenshot 2025-04-12 134451](https://github.com/user-attachments/assets/9810ccff-bd4b-4242-a4d6-d18741b4b224)
@@ -129,8 +136,7 @@ volumes:
 ```
 
 ## 🧹 To Do
-1. Add JWT authentication
+1. Role-based access control
 2. Send Logs into Grafana
-3. Role-based access control
-4. CI/CD pipeline
-5. Frontend integration (React?)
+3. CI/CD pipeline
+4. Frontend integration (React?)

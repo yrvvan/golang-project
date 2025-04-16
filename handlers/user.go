@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"go-rose/services"
+	"golang-project/services"
 
 	"github.com/gin-gonic/gin"
 )

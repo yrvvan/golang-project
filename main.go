@@ -3,10 +3,8 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/go-playground/validator/v10"
-	"go-rose/validators"
-	"go-rose/database"
-	"go-rose/handlers"
+	"golang-project/database"
+	"golang-project/routes"
 	"log"
 )
 
@@ -18,25 +16,9 @@ func main() {
 
 	database.Connect()
 
-	router := gin.Default()
+	r := gin.Default()
 
-	validate := validator.New()
+	routes.RegisterUserRoutes(r) // ⬅️ mount the routes here
 
-	// Register custom validation for email uniqueness
-	validate.RegisterValidation("emailnotexist", validators.EmailNotExist)
-
-	// Register the custom validator with Gin context
-	router.Use(func(c *gin.Context) {
-		// Set custom validator to context
-		c.Set("validator", validate)
-		c.Next()
-	})
-
-	router.GET("/users", handlers.GetUsers)
-	router.GET("/users/:id", handlers.GetUser)
-	router.POST("/users", handlers.CreateUser)
-	router.PUT("/users/:id", handlers.UpdateUser)
-	router.DELETE("/users/:id", handlers.DeleteUser)
-
-	router.Run(":8089")
+	r.Run(":8089")
 }

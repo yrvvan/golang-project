@@ -7,7 +7,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"go-rose/models"
+	"golang-project/models"
 )
 
 var DB *gorm.DB

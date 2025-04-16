@@ -3,7 +3,7 @@ version: "3.9"
 services:
   app:
     build: .
-    container_name: go-rose
+    container_name: golang-project
     ports:
       - "8089:8089"
     env_file:

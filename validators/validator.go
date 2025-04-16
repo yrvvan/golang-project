@@ -3,8 +3,9 @@ package validators
 import (
 	"strings"
 
-	"go-rose/models"
-	"go-rose/database"
+	"golang-project/models"
+	"golang-project/database"
+
 	"github.com/go-playground/validator/v10"
 )
 
