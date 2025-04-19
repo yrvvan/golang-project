@@ -73,11 +73,6 @@ It will :
 - Run the Go backend on http://localhost:8089
 
 4. Endpoints
-- **GET	/users** #Get all users
-- **GET	/users/:id** #Get user by ID
-- **POST /users**	#Create a user
-- **PUT	/users/:id** #Update user
-- **DELETE /users/:id**	#Delete user
 
 | Method  | Path  | Purpose |
 | :------------ |:---------------:| -----:|
