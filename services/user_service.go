@@ -7,6 +7,7 @@ import (
 
 	"golang-project/database"
 	"golang-project/models"
+	"golang-project/utils"
 	"golang-project/validators"
 
 	"github.com/gin-gonic/gin"
@@ -33,17 +34,56 @@ func CreateUserService(c *gin.Context) (int, gin.H) {
 		}
 	}
 
-	if err := database.DB.Create(&user).Error; err != nil {
+	hashedPassword, err := utils.HashPassword(user.Password)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
+		return http.StatusInternalServerError, gin.H{"error": err.Error()}
+	}
+
+	newUserPayload := models.User{
+		Name:     user.Name,
+		Email:    user.Email,
+		Password: hashedPassword,
+		Profile: models.Profile{
+			NationalID: user.Profile.NationalID,
+			BirthPlace: user.Profile.BirthPlace,
+			BirthDate:  user.Profile.BirthDate,
+			Address:    user.Profile.Address,
+		},
+		Leave: models.LeaveBalance{
+			AnnualLeave: user.Leave.AnnualLeave,
+			SickLeave:   user.Leave.SickLeave,
+			UnpaidLeave: user.Leave.UnpaidLeave,
+		},
+	}
+
+	if err := database.DB.Create(&newUserPayload).Error; err != nil {
 		return http.StatusInternalServerError, gin.H{
 			"status":  http.StatusInternalServerError,
 			"message": "Internal server error",
 		}
 	}
 
+	newUserResponse := models.GetUser{
+		Name:     user.Name,
+		Email:    user.Email,
+		Profile: models.Profile{
+			NationalID: user.Profile.NationalID,
+			BirthPlace: user.Profile.BirthPlace,
+			BirthDate:  user.Profile.BirthDate,
+			Address:    user.Profile.Address,
+		},
+		Leave: models.LeaveBalance{
+			AnnualLeave: user.Leave.AnnualLeave,
+			SickLeave:   user.Leave.SickLeave,
+			UnpaidLeave: user.Leave.UnpaidLeave,
+		},
+	}
+
 	return http.StatusCreated, gin.H{
 		"status":  http.StatusCreated,
 		"message": "Data created successfully",
-		"data":    user,
+		"data":    newUserResponse,
 	}
 }
 
@@ -59,10 +99,24 @@ func GetUsersService(c *gin.Context) (int, gin.H) {
 		}
 	}
 
+	var allUsers []models.GetUser
+	for _, u := range users {
+		allUsers = append(allUsers, models.GetUser{
+			ID:        u.ID,
+			Name:      u.Name,
+			Email:     u.Email,
+			Profile:   u.Profile,
+			Leave:     u.Leave,
+			CreatedAt: u.CreatedAt,
+			UpdatedAt: u.UpdatedAt,
+			DeletedAt: u.DeletedAt,
+		})
+	}
+
 	return http.StatusOK, gin.H{
 		"status":  http.StatusOK,
 		"message": "Data retrieved successfully",
-		"data":    users,
+		"data":    allUsers,
 	}
 }
 
@@ -79,10 +133,21 @@ func GetUserService(c *gin.Context) (int, gin.H) {
 		}
 	}
 
+	userByID := models.GetUser{
+		ID:        user.ID,
+		Name:      user.Name,
+		Email:     user.Email,
+		Profile:   user.Profile,
+		Leave:     user.Leave,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+		DeletedAt: user.DeletedAt,
+	}
+
 	return http.StatusOK, gin.H{
 		"status":  http.StatusOK,
 		"message": "Data retrieved successfully",
-		"data":    user,
+		"data":    userByID,
 	}
 }
 
@@ -102,8 +167,15 @@ func UpdateUserService(c *gin.Context) (int, gin.H) {
 		return http.StatusBadRequest, gin.H{"error": err.Error()}
 	}
 
+	hashedPassword, err := utils.HashPassword(reqBody.Password)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
+		return http.StatusInternalServerError, gin.H{"error": err.Error()}
+	}
+
 	// 3. Update basic user fields
 	user.Name = reqBody.Name
+	user.Password = hashedPassword
 
 	// 4. Update profile (if exists)
 	if user.Profile.UserID != 0 {
@@ -139,7 +211,7 @@ func UpdateUserService(c *gin.Context) (int, gin.H) {
 	tx.Commit()
 
 	// Fetch updated data
-	var updatedUser models.User
+	var updatedUser models.GetUser
 	database.DB.Preload("Profile").Preload("Leave").First(&updatedUser, id)
 
 	statusMsg := "Data updated successfully"
@@ -153,7 +225,7 @@ func UpdateUserService(c *gin.Context) (int, gin.H) {
 
 func DeleteUserService(c *gin.Context) (int, gin.H) {
 	id := c.Param("id")
-	var user models.User
+	var user models.GetUser
 	if err := database.DB.First(&user, id).Error; err != nil {
 		return http.StatusNotFound, gin.H{"error": "User not found"}
 	}
