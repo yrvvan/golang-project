@@ -33,6 +33,15 @@ func CreateUserService(c *gin.Context) (int, gin.H) {
 			}
 		}
 	}
+	
+	var existingUser models.User
+	if err := database.DB.Where("email = ?", user.Email).First(&existingUser).Error; err == nil {
+		// User found with the same email
+		return http.StatusConflict, gin.H{
+			"status":  http.StatusConflict,
+			"message": "Email already exists",
+		}
+	}
 
 	hashedPassword, err := utils.HashPassword(user.Password)
 	if err != nil {
@@ -65,8 +74,8 @@ func CreateUserService(c *gin.Context) (int, gin.H) {
 	}
 
 	newUserResponse := models.GetUser{
-		Name:     user.Name,
-		Email:    user.Email,
+		Name:  user.Name,
+		Email: user.Email,
 		Profile: models.Profile{
 			NationalID: user.Profile.NationalID,
 			BirthPlace: user.Profile.BirthPlace,
@@ -122,11 +131,24 @@ func GetUsersService(c *gin.Context) (int, gin.H) {
 
 func GetUserService(c *gin.Context) (int, gin.H) {
 	id := c.Param("id")
+	email := c.Query("email")
+
 	var user models.User
-	if err := database.DB.
-		Preload("Profile").
-		Preload("Leave").
-		First(&user, id).Error; err != nil {
+	query := database.DB.Preload("Profile").Preload("Leave")
+
+	var err error
+	if email != "" {
+		err = query.Where("email = ?", email).First(&user).Error
+	} else if id != "" {
+		err = query.First(&user, id).Error
+	} else {
+		return http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Please provide user ID or email",
+		}
+	}
+
+	if err != nil {
 		return http.StatusNotFound, gin.H{
 			"status":  http.StatusNotFound,
 			"message": "User not found",
